@@ -1,0 +1,14 @@
+.titulo-formulario{
+    text-align: center;
+}
+
+.formulario-contenedor{
+    margin-top: 1rem;
+}
+
+.formulario{
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
