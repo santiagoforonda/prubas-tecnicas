@@ -1,0 +1,11 @@
+25/11/2024
+
+El dia de hoy he terminado la funcionalidad mas importante del frontend con respecto al backend,
+el frontend consulta exitosamente a la API que desarrolle en Java con SpringBoot
+despues de varios intentos fallidos y refactorizaciones pude lograr que los datos se muestren como
+era debido, ahora falta agregar todo lo que tiene que ver con los estilos del proyecto, el CSS y las imagenes
+pero eso lo dejare para despues, tal vez en otra ocasion agregue los estilos, doy por terminado en el 90% 
+del proyecto Hermes, que sin duda alguna aprendi mucho con esto, ahora ya toca descansar un rato.
+
+Creo recordar que habia que hacer unas correciones en el diseño del como seria la BD pero ahora no lo recuerdo
+en otro momento lo volvere a revisar, tambien seria interesante agregar mas entidades al sistema.

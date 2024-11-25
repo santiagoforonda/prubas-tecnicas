@@ -1,0 +1,307 @@
+El backend del proyecto Hermes fue realizado con el lenguaje de programacion de Java,acompañado con el framework de SpringBoot
+
+Para este proyecto se realiazaron las mejores practicas de programacion posibles, siguiendo los principios SOLID, la arquitectura de n
+capas, el patron de diseño DTO y el patron de diseño Builder para la entidad que representa los vuelos, por el momento
+se usa como bases de datos una memoria H2 en el futuro se puede conectar con cualquiera.
+
+Posibles actualizacion futuras:
+	1.Nuevas entidades como Avion,Pais,Ciudad,etc.
+	2.Crear nuevas excepciones para la fatal de datos al momento de registrar un usuario, una reserva o un vuelo.
+
+
+URLS
+
+Estas son las URLS con las que puede hacer un llamado al backend y consumir los datos que retorna
+
+Login y autenticacion:
+
+http://localhost:8080/auth/register
+Enviar:
+{
+	"name":"santiago",
+    "lastname":"foronda",
+    "email":"123@gmail.com",
+    "password":"elcapos2930F$"
+	
+
+}
+Retorna:
+{
+    "id": 1,
+    "name": "santiago",
+    "lastname": "foronda",
+    "email": "123@gmail.com",
+    "password": "$2a$10$BkmT7Gza79Jn9/WRV.93/eCG4NMpjS1nYJnFpD4GF4qaVfI5U6UNW",
+    "bookings": null
+}
+Debido a que al momento de registrar un usuario por primera vez no tiene reservas asociadas, el sistema retornara nulo.
+
+http://localhost:8080/auth/login
+Enviar:
+{
+	"email":"123@gmail.com",
+    "password":"elcapos2930F$"
+}
+Retorna:
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjNAZ21haWwuY29tIiwiaWF0IjoxNzMwNzcxMjM1LCJleHAiOjE3MzA3NzI2NzV9.iOuBDw4qoVUDDsMHE4yZDkDfUh1Z30iJrCcBhbDU0Wk"
+}
+El sistema retornara un Token de acceso para que el usuario se pueda autenticar para acceder a las demas URLS
+
+TODO LO RELACIONADO CON EL CATALAGO DE VUELOS:
+
+Registrar un vuelo:
+http://localhost:8080/api/v1/catalog/flights
+Enviar:
+{
+  "departureDate": "30-10-2024",
+  "departureAirportCode": "JFK",
+  "departureAirportName": "John F. Kennedy International Airport",
+  "departureCity": "New York",
+  "departureLocale": "EN",
+  "arrivalDate": "31-10-2024",
+  "arrivalAirportCode": "LAX",
+  "arrivalAirPortName": "Los Angeles International Airport",
+  "arrivalCity": "Los Angeles",
+  "arrivalLocale": "EN",
+  "ticketPrice": 500,
+  "ticketCurrency": "USD",
+  "flightNumber": 12345,
+  "seatCapacity": 180
+}
+El numero del vuelo es un valor unico que no se puede repetir.
+
+Retorna:
+{
+    "id": 1,
+    "departureDate": "30-10-2024",
+    "departureAirportCode": "JFK",
+    "departureAirportName": "John F. Kennedy International Airport",
+    "departureCity": "New York",
+    "departureLocale": "EN",
+    "arrivalDate": "31-10-2024",
+    "arrivalAirportCode": "LAX",
+    "arrivalAirPortName": "Los Angeles International Airport",
+    "arrivalCity": "Los Angeles",
+    "arrivalLocale": "EN",
+    "ticketPrice": 500,
+    "ticketCurrency": "USD",
+    "flightNumber": 12345,
+    "seatCapacity": 180,
+    "bookings": null
+}
+Al momento de registrar un vuelo por primera vez no tiene reservas asociadas, el sistemas retornara nulo en ese campo
+
+Obtener una lista de vuelos mediante el aeropuerto de despegue, el aeropuerto de llegada y la fecha
+http://localhost:8080/api/v1/catalog/flights/?departureAirPortCode=JFK&arrivalAirPortCode=LAX&departureDate=2024-11-03
+
+Retorna un arreglo en donde los elementos cumplan con las respectivas variables:
+[
+    {
+        "id": 1,
+        "departureDate": "30-10-2024",
+        "departureAirportCode": "JFK",
+        "departureAirportName": "John F. Kennedy International Airport",
+        "departureCity": "New York",
+        "departureLocale": "EN",
+        "arrivalDate": "31-10-2024",
+        "arrivalAirportCode": "LAX",
+        "arrivalAirPortName": "Los Angeles International Airport",
+        "arrivalCity": "Los Angeles",
+        "arrivalLocale": "EN",
+        "ticketPrice": 500,
+        "ticketCurrency": "USD",
+        "flightNumber": 12345,
+        "seatCapacity": 180,
+        "bookings": null
+    }
+]
+
+Actualizar un vuelo por su ID
+http://localhost:8080/api/v1/catalog/flight/{idvuelo}
+En el cuerpo enviar los datos que se van actualizar.
+ {
+
+        "departureDate": "30-10-2024",
+        "departureAirportCode": "JFK",
+        "departureAirportName": "John F. Kennedy International Airport",
+        "departureCity": "New York",
+        "departureLocale": "EN",
+        "arrivalDate": "31-10-2024",
+        "arrivalAirportCode": "LAX",
+        "arrivalAirPortName": "Los Angeles International Airport",
+        "arrivalCity": "Los Angeles",
+        "arrivalLocale": "EN",
+        "ticketPrice": 500,
+        "ticketCurrency": "USD",
+        "flightNumber": 12345,
+        "seatCapacity": 180,
+        "bookings": null
+    }
+
+
+Eliminar un vuelo por su ID
+http://localhost:8080/api/v1/catalog/flight/{idvuelo}
+El sistemas retornara true.
+
+Obtener una lista de vuelos que despegan de cierto aeropuerto en cierta fecha
+http://localhost:8080/api/v1/catalog/fligth/JFK/?departureDate=30-10-2024
+Retorna:
+[
+    {
+        "id": 1,
+        "departureDate": "30-10-2024",
+        "departureAirportCode": "JFK",
+        "departureAirportName": "John F. Kennedy International Airport",
+        "departureCity": "New York",
+        "departureLocale": "EN",
+        "arrivalDate": "31-10-2024",
+        "arrivalAirportCode": "LAX",
+        "arrivalAirPortName": "Los Angeles International Airport",
+        "arrivalCity": "Los Angeles",
+        "arrivalLocale": "EN",
+        "ticketPrice": 500,
+        "ticketCurrency": "USD",
+        "flightNumber": 12345,
+        "seatCapacity": 180,
+        "bookings": null
+    }
+]
+
+Obtener todos los vuelos registrados en la BD
+http://localhost:8080/api/v1/catalog/flightsAll
+
+TODO LO RELACIONADO CON BOOKING
+
+IMPORTANTE:La entidad booking depende de la existencia de la entidad vuelos y usuario por lo tanto para crear una reserva ya debe haber un vuelo Y un usuario.
+CANCELLED
+registrar una reserva
+http://localhost:8080/api/v1/booking/user/{IdUsuario}/flight/{IdVuelo}
+Enviar:
+{
+    "paymentToken":"6555555fgfghjghjghj",
+    "createdAt":"20-10-2024",
+    "referenceCode":"sdfkjwughjghjghjghjgghjhgjghjghj",
+}
+Retorna:
+{
+    "id": 1,
+    "paymentToken": "6555555fgfghjghjghj",
+    "checkInd": false,
+    "createdAt": "20-10-2024",
+    "referenceCode": "sdfkjwughjghjghjghjgghjhgjghjghj",
+    "status": "UNCONFIRMED"
+}
+Por defecto al momento de registrar una reserva, el checkin es falso y el status es inconfirmado hasta que se actualicen esos datos.
+
+Obtener una reserva por su ID:
+http://localhost:8080/api/v1/booking/{IdReserva}
+Retorna:
+{
+    "id": 1,
+    "paymentToken": "6555555fgfghjghjghj",
+    "checkInd": false,
+    "createdAt": "20-10-2024",
+    "referenceCode": "sdfkjwughjghjghjghjgghjhgjghjghj",
+    "status": "UNCONFIRMED"
+}
+
+Obtener una lista de todas las reservas
+http://localhost:8080/api/v1/booking
+
+Obtener una lista de las reservas realizadas por un usuario
+http://localhost:8080/api/v1/bookingByUser?user=123@gmail.com
+
+Obtener una lista de las reservas por su estado
+http://localhost:8080/api/v1/bookingByStatus?status=UNCONFIRMED
+
+Obtener una lista de las reservas realizadas por un usuario y su estado
+http://localhost:8080/api/v1/bookingBystatusAndUser?user=123@gmail.com&status=UNCONFIRMED
+
+Obtener una lista de las reservas de un vuelo
+http://localhost:8080/api/v1/booking/fligth/{idVuelo}
+
+Actualizar una reserva
+http://localhost:8080/api/v1/booking/{idReserva}/user/{IdUsuario}/flight/{IDVuelo}
+
+Enviar:
+{
+    "paymentToken": "654215",
+        "checkInd": true,
+        "createdAt": "20-10-2024",
+        "referenceCode": "sdfkjwuhfvbnhsdb54",
+        "status": "CONFIRMED"
+}
+
+Retorna:
+{
+    "id": 1,
+    "paymentToken": "6555555fgfghjghjghj",
+    "checkInd": true,
+    "createdAt": "20-10-2024",
+    "referenceCode": "sdfkjwughjghjghjghjgghjhgjghjghj",
+    "status": "CONFIRMED"
+}
+
+Eliminar una reserva
+http://localhost:8080/api/v1/booking/{idDeLaReserva}
+
+
+TODO LO RELACIONADO AL USUARIO:
+buscar un usuario por ID
+http://localhost:8080/api/v1/user/{idUsuario}
+Retorna
+{
+    "id": 1,
+    "name": "santiago",
+    "lastname": "foronda",
+    "email": "123@gmail.com",
+    "password": "$2a$10$FHxaLET7w4TOVajLmml.7edRVSvBAUuC.BNgiTC9C4ymMDVYk6R26",
+    "bookings": [
+        {
+            "id": 1,
+            "paymentToken": "6555555fgfghjghjghj",
+            "checkInd": true,
+            "createdAt": "2024-10-20",
+            "referenceCode": "sdfkjwughjghjghjghjgghjhgjghjghj",
+            "status": "CONFIRMED"
+        }
+    ]
+}
+Asi es como se veria el JSON de un usuario con reservas asociadas, lo mismo pasaria con los vuelos.
+
+Actualizar un usuario:
+http://localhost:8080/api/v1/user/{idUsuario}
+Enviar:
+{
+    "name":"sergio",
+    "lastname":"foronda",
+    "email":"123@gmail.com",
+    "password":"elcapos2930F$"
+}
+
+Retorna:
+{
+    "id": 1,
+    "name": "sergio",
+    "lastname": "foronda",
+    "email": "123@gmail.com",
+    "password": "$2a$10$.vkOgkFb4BbGN/PC9Pevee62Z/UEifC.FwJF85hKUR4naAyKGpVi6",
+    "bookings": [
+        {
+            "id": 1,
+            "paymentToken": "6552323444444",
+            "checkInd": false,
+            "createdAt": "2024-10-20",
+            "referenceCode": "sdfk333343s3j333",
+            "status": "UNCONFIRMED"
+        }
+    ]
+}
+
+Elimiar un usuario por su ID:
+http://localhost:8080/api/v1/user/{idUsuario}
+
+Obtener una lista de todos los usuarios:
+http://localhost:8080/api/v1/getUsers
+
